@@ -482,11 +482,11 @@ Transport.prototype.shared = {
 		query = query || {};
 		try {
 			var block;
-			if (query.block) {
-				query.block = bson.deserialize(Buffer.from(query.block));
-				block = modules.blocks.verify.addBlockProperties(query.block);
-			}
-			block = library.logic.block.objectNormalize(block);
+			// if (query.block) {
+			// 	query.block = bson.deserialize(Buffer.from(query.block));
+			// 	block = modules.blocks.verify.addBlockProperties(query.block);
+			// }
+			block = library.logic.block.objectNormalize(query.block);
 		} catch (e) {
 			library.logger.debug('Block normalization failed', {err: e.toString(), module: 'transport', block: query.block });
 

@@ -157,7 +157,7 @@ Broadcaster.prototype.broadcast = function (params, options, cb) {
 				var optionDeserialized = JSON.parse(JSON.stringify(options));
 
 				if (optionDeserialized.data.block) {
-					optionDeserialized.data.block = bson.deserialize(options.data.block);
+					// optionDeserialized.data.block = bson.deserialize(options.data.block);
 				}
 				library.logger.debug('Begin broadcast', optionDeserialized);
 			} catch (e) {
