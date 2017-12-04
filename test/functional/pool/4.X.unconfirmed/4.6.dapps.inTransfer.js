@@ -23,7 +23,7 @@ describe('POST /api/transactions (unconfirmed type 6 on top of type 4)', functio
 
 	localCommon.beforeValidationPhaseWithDapp(scenarios);
 
-	describe('sending inTransfer', function () {
+	describe.skip('sending inTransfer', function () {
 
 		it('regular scenario should be ok', function () {
 			transaction = lisk.transfer.createInTransfer(scenarios.regular.dapp.id, 1, scenarios.regular.account.password);
@@ -32,6 +32,19 @@ describe('POST /api/transactions (unconfirmed type 6 on top of type 4)', functio
 				expect(res).to.have.property('status').to.equal(200);
 				expect(res).to.have.nested.property('body.status').to.equal('Transaction(s) accepted');
 				goodTransactions.push(transaction);
+			});
+		});
+	});
+
+	describe('check inTransfer DOES NOT process', function () {
+
+		it('regular scenario should be ok', function () {
+			transaction = lisk.transfer.createInTransfer(scenarios.regular.dapp.id, 1, scenarios.regular.account.password);
+
+			return sendTransactionPromise(transaction).then(function (res) {
+				expect(res).to.have.property('status').to.equal(400);
+				expect(res).to.have.nested.property('body.message').to.equal('Invalid transaction body - Frozen transaction type ' + transaction.type);
+				badTransactions.push(transaction);
 			});
 		});
 	});

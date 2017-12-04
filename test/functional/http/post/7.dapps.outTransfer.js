@@ -78,7 +78,7 @@ describe('POST /api/transactions (type 7) outTransfer dapp', function () {
 
 		common.invalidAssets('outTransfer', badTransactions);
 
-		describe('dappId', function () {
+		describe.skip('dappId', function () {
 
 			it('without should fail', function () {
 				transaction = lisk.transfer.createOutTransfer(randomUtil.guestbookDapp.id, randomUtil.transaction().id, accountFixtures.genesis.address, Date.now(), account.password);
@@ -157,7 +157,7 @@ describe('POST /api/transactions (type 7) outTransfer dapp', function () {
 			});
 		});
 
-		describe('transactionId', function () {
+		describe.skip('transactionId', function () {
 			
 			it('without should fail', function () {
 				transaction = lisk.transfer.createOutTransfer(randomUtil.guestbookDapp.id, randomUtil.transaction().id, accountFixtures.genesis.address, Date.now(), account.password);
@@ -236,7 +236,7 @@ describe('POST /api/transactions (type 7) outTransfer dapp', function () {
 			});
 		});
 
-		describe('recipientId', function () {
+		describe.skip('recipientId', function () {
 
 			it('with integer should fail', function () {
 				transaction = lisk.transfer.createOutTransfer(randomUtil.guestbookDapp.id, randomUtil.transaction().id, accountFixtures.genesis.address, Date.now(), account.password);
@@ -304,7 +304,7 @@ describe('POST /api/transactions (type 7) outTransfer dapp', function () {
 			});
 		});
 
-		describe('amount', function () {
+		describe.skip('amount', function () {
 
 			it('using < 0 should fail', function () {
 				transaction = lisk.transfer.createOutTransfer(randomUtil.guestbookDapp.id, randomUtil.transaction().id, accountFixtures.genesis.address, -1, account.password);
@@ -340,7 +340,7 @@ describe('POST /api/transactions (type 7) outTransfer dapp', function () {
 		});
 	});
 
-	describe('transactions processing', function () {
+	describe.skip('transactions processing', function () {
 
 		it('using unknown dapp id should fail', function () {
 			var unknownDappId = '1';
@@ -404,6 +404,19 @@ describe('POST /api/transactions (type 7) outTransfer dapp', function () {
 					expect(res).to.have.nested.property('body.status').that.is.equal('Transaction(s) accepted');
 					goodTransactions.push(transaction);
 				});
+			});
+		});
+	});
+
+	describe('check transaction DOES NOT process', function () {
+
+		it('using correct data should fail', function () {
+			transaction = lisk.transfer.createOutTransfer(randomUtil.guestbookDapp.id, randomUtil.transaction().id, accountFixtures.address, 10 * normalizer, account.password);
+
+			return sendTransactionPromise(transaction).then(function (res) {
+				expect(res).to.have.property('status').to.equal(400);
+				expect(res).to.have.nested.property('body.message').to.equal('Invalid transaction body - Frozen transaction type ' + transaction.type);
+				badTransactions.push(transaction);
 			});
 		});
 	});

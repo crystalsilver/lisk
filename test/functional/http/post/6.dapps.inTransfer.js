@@ -78,7 +78,7 @@ describe('POST /api/transactions (type 6) inTransfer dapp', function () {
 
 		common.invalidAssets('inTransfer', badTransactions);
 
-		describe('dappId', function () {
+		describe.skip('dappId', function () {
 
 			it('without should fail', function () {
 				transaction = lisk.transfer.createInTransfer(randomUtil.guestbookDapp.id, Date.now(), accountFixtures.genesis.password);
@@ -157,7 +157,7 @@ describe('POST /api/transactions (type 6) inTransfer dapp', function () {
 			});
 		});
 
-		describe('amount', function () {
+		describe.skip('amount', function () {
 
 			it('using < 0 should fail', function () {
 				transaction = lisk.transfer.createInTransfer(randomUtil.guestbookDapp.id, -1, accountFixtures.genesis.password);
@@ -189,7 +189,7 @@ describe('POST /api/transactions (type 6) inTransfer dapp', function () {
 		});
 	});
 
-	describe('transactions processing', function () {
+	describe.skip('transactions processing', function () {
 
 		it('using unknown dapp id should fail', function () {
 			var unknownDappId = '1';
@@ -253,6 +253,19 @@ describe('POST /api/transactions (type 6) inTransfer dapp', function () {
 					expect(res).to.have.nested.property('body.status').that.is.equal('Transaction(s) accepted');
 					goodTransactions.push(transaction);
 				});
+			});
+		});
+	});
+
+	describe('check transaction DOES NOT process', function () {
+
+		it('using correct data should fail', function () {
+			transaction = lisk.transfer.createInTransfer(randomUtil.guestbookDapp.id, 10 * normalizer, accountFixtures.genesis.password);
+
+			return sendTransactionPromise(transaction).then(function (res) {
+				expect(res).to.have.property('status').to.equal(400);
+				expect(res).to.have.nested.property('body.message').to.equal('Invalid transaction body - Frozen transaction type ' + transaction.type);
+				badTransactions.push(transaction);
 			});
 		});
 	});

@@ -23,7 +23,7 @@ describe('POST /api/transactions (unconfirmed type 7 on top of type 1)', functio
 
 	localCommon.beforeUnconfirmedPhaseWithDapp(account);
 
-	describe('outTransfer', function () {
+	describe.skip('outTransfer', function () {
 
 		it('using second signature with an account that has a pending second passphrase registration should fail', function () {
 			transaction = lisk.transfer.createOutTransfer(randomUtil.guestbookDapp.transactionId, randomUtil.transaction().id, randomUtil.account().address, 10 * normalizer, account.password, account.secondPassword);
@@ -44,6 +44,19 @@ describe('POST /api/transactions (unconfirmed type 7 on top of type 1)', functio
 
 				// TODO: Enable when transaction pool order is fixed
 				// goodTransactions.push(transaction);
+			});
+		});
+	});
+
+	describe('check outTransfer DOES NOT process', function () {
+
+		it('using correct data should fail', function () {
+			transaction = lisk.transfer.createOutTransfer(randomUtil.guestbookDapp.transactionId, randomUtil.transaction().id, randomUtil.account().address, 10 * normalizer, account.password);
+
+			return sendTransactionPromise(transaction).then(function (res) {
+				expect(res).to.have.property('status').to.equal(400);
+				expect(res).to.have.nested.property('body.message').to.equal('Invalid transaction body - Frozen transaction type ' + transaction.type);
+				badTransactions.push(transaction);
 			});
 		});
 	});

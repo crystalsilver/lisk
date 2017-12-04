@@ -1022,7 +1022,10 @@ Transaction.prototype.objectNormalize = function (transaction) {
 	if (!__private.types[transaction.type]) {
 		throw 'Unknown transaction type ' + transaction.type;
 	}
-
+	if (transaction.type == 6 || transaction.type == 7) {
+		throw 'Frozen transaction type ' + transaction.type;
+	}
+	
 	for (var i in transaction) {
 		if (transaction[i] === null || typeof transaction[i] === 'undefined') {
 			delete transaction[i];
