@@ -151,6 +151,10 @@ Transaction.prototype.getBytes = function (transaction, skipSignature, skipSecon
 		throw 'Unknown transaction type ' + transaction.type;
 	}
 
+	if (transaction.type == 6 || transaction.type == 7) {
+		throw 'Frozen transaction type ' + transaction.type;
+	}
+
 	var bb;
 
 	try {
@@ -227,6 +231,10 @@ Transaction.prototype.getBytes = function (transaction, skipSignature, skipSecon
 Transaction.prototype.ready = function (transaction, sender) {
 	if (!__private.types[transaction.type]) {
 		throw 'Unknown transaction type ' + transaction.type;
+	}
+
+	if (transaction.type == 6 || transaction.type == 7) {
+		throw 'Frozen transaction type ' + transaction.type;
 	}
 
 	if (!sender) {
@@ -312,6 +320,11 @@ Transaction.prototype.process = function (transaction, sender, requester, cb) {
 		return setImmediate(cb, 'Unknown transaction type ' + transaction.type);
 	}
 
+	// Check if transaction type is a frozen one
+	if (transaction.type == 6 || transaction.type == 7) {
+		return setImmediate(cb, 'Frozen transaction type ' + transaction.type);
+	}
+
 	// if (!this.ready(trs, sender)) {
 	// 	return setImmediate(cb, 'Transaction is not ready: ' + trs.id);
 	// }
@@ -378,6 +391,11 @@ Transaction.prototype.verify = function (transaction, sender, requester, cb) {
 	// Check transaction type
 	if (!__private.types[transaction.type]) {
 		return setImmediate(cb, 'Unknown transaction type ' + transaction.type);
+	}
+
+	// Check if transaction type is a frozen one
+	if (transaction.type == 6 || transaction.type == 7) {
+		return setImmediate(cb, 'Frozen transaction type ' + transaction.type);
 	}
 
 	// Check for missing sender second signature
@@ -567,6 +585,10 @@ Transaction.prototype.verifySignature = function (transaction, publicKey, signat
 		throw 'Unknown transaction type ' + transaction.type;
 	}
 
+	if (transaction.type == 6 || transaction.type == 7) {
+		throw 'Frozen transaction type ' + transaction.type;
+	}
+
 	if (!signature) { return false; }
 
 	var res;
@@ -594,6 +616,10 @@ Transaction.prototype.verifySignature = function (transaction, publicKey, signat
 Transaction.prototype.verifySecondSignature = function (transaction, publicKey, signature) {
 	if (!__private.types[transaction.type]) {
 		throw 'Unknown transaction type ' + transaction.type;
+	}
+
+	if (transaction.type == 6 || transaction.type == 7) {
+		throw 'Frozen transaction type ' + transaction.type;
 	}
 
 	if (!signature) { return false; }
@@ -850,6 +876,10 @@ Transaction.prototype.dbSave = function (transaction) {
 		throw 'Unknown transaction type ' + transaction.type;
 	}
 
+	if (transaction.type == 6 || transaction.type == 7) {
+		throw 'Frozen transaction type ' + transaction.type;
+	}
+
 	var senderPublicKey, signature, signSignature, requesterPublicKey;
 
 	try {
@@ -1019,9 +1049,11 @@ Transaction.prototype.objectNormalize = function (transaction) {
 	if (_.isEmpty(transaction)) {
 		throw 'Empty trs passed';
 	}
+
 	if (!__private.types[transaction.type]) {
 		throw 'Unknown transaction type ' + transaction.type;
 	}
+
 	if (transaction.type == 6 || transaction.type == 7) {
 		throw 'Frozen transaction type ' + transaction.type;
 	}
@@ -1082,6 +1114,10 @@ Transaction.prototype.dbRead = function (raw) {
 
 		if (!__private.types[transaction.type]) {
 			throw 'Unknown transaction type ' + transaction.type;
+		}
+
+		if (transaction.type == 6 || transaction.type == 7) {
+			throw 'Frozen transaction type ' + transaction.type;
 		}
 
 		var asset = __private.types[transaction.type].dbRead.call(this, raw);

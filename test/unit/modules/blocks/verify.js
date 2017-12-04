@@ -481,6 +481,32 @@ describe('blocks/verify', function () {
 			validBlock.transactions[0].type = transactionType;
 		});
 
+		it('should fail when a transaction is of frozen type 6', function () {
+			var transactionType = validBlock.transactions[0].type;
+			validBlock.transactions[0].type = 6;
+
+			var result = blocksVerify[functionName](validBlock);
+
+			expect(result.errors).to.be.an('array').with.lengthOf(2);
+			expect(result.errors[0]).to.equal('Invalid payload hash');
+			expect(result.errors[1]).to.equal('Frozen transaction type ' + validBlock.transactions[0].type);
+
+			validBlock.transactions[0].type = transactionType;
+		});
+
+		it('should fail when a transaction is of frozen type 7', function () {
+			var transactionType = validBlock.transactions[0].type;
+			validBlock.transactions[0].type = 7;
+
+			var result = blocksVerify[functionName](validBlock);
+
+			expect(result.errors).to.be.an('array').with.lengthOf(2);
+			expect(result.errors[0]).to.equal('Invalid payload hash');
+			expect(result.errors[1]).to.equal('Frozen transaction type ' + validBlock.transactions[0].type);
+
+			validBlock.transactions[0].type = transactionType;
+		});
+
 		it('should fail when a transaction is duplicated', function () {
 			var secondTransaction = validBlock.transactions[1];
 			validBlock.transactions[1] = validBlock.transactions[0];

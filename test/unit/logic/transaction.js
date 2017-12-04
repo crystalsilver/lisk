@@ -300,6 +300,26 @@ describe('transaction', function () {
 			}).to.throw('Unknown transaction type ' + invalidTransactionType);
 		});
 
+		it('should throw error when transaction type is frozen 6', function () {
+			var transaction = _.cloneDeep(validTransaction);
+			var invalidTransactionType = 6;
+			transaction.type = invalidTransactionType;
+
+			expect(function () {
+				transactionLogic.ready(transaction, sender);
+			}).to.throw('Frozen transaction type ' + invalidTransactionType);
+		});
+
+		it('should throw error when transaction type is frozen 7', function () {
+			var transaction = _.cloneDeep(validTransaction);
+			var invalidTransactionType = 7;
+			transaction.type = invalidTransactionType;
+
+			expect(function () {
+				transactionLogic.ready(transaction, sender);
+			}).to.throw('Frozen transaction type ' + invalidTransactionType);
+		});
+
 		it('should return false when sender not provided', function () {
 			expect(transactionLogic.ready(validTransaction)).to.equal(false);
 		});
